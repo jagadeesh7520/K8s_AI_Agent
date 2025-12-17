@@ -152,6 +152,8 @@ ollama serve
 ```bash
 ollama pull gemma:2b
 ```
+<img width="1427" height="254" alt="Screenshot 2025-12-17 105020" src="https://github.com/user-attachments/assets/47225745-8c8e-4785-beb4-69c9517e1615" />
+
 
 ###  Install Python
 
@@ -269,17 +271,17 @@ def fallback(logs, events):
         return "kubectl set env deployment/demo-app DB_URL=postgres://db:5432/app"
     return None
 
-print("\n🔍 POD STATUS")
+print("\n POD STATUS")
 print(get_status())
 
 logs = get_logs()
 events = get_events()
 
-print("\n📄 LOGS\n", logs)
-print("\n📄 EVENTS\n", events)
+print("\n LOGS\n", logs)
+print("\n  EVENTS\n", events)
 
 analysis = ask_ai(logs, events)
-print("\n🤖 AI SRE ANALYSIS\n", analysis)
+print("\n AI SRE ANALYSIS\n", analysis)
 
 parsed = parse_response(analysis)
 cmd = build_fix(parsed.get("FIX_TYPE"), parsed.get("FIX_VALUE"))
@@ -288,17 +290,17 @@ if not cmd:
     cmd = fallback(logs, events)
 
 if not cmd:
-    print("❌ No safe fix available")
+    print("No safe fix available")
     sys.exit(1)
 
-print("\n✅ Proposed Fix:\n", cmd)
+print("\n Proposed Fix:\n", cmd)
 
 approve = input("\nApprove fix? (yes/no): ").lower()
 if approve == "yes":
-    print("\n🚀 Applying fix...\n")
+    print("\n Applying fix...\n")
     subprocess.run(cmd, shell=True)
 else:
-    print("❌ Fix skipped")
+    print("Fix skipped")
 ```
 
 ---
@@ -371,6 +373,23 @@ spec:
 kubectl apply -f demo-app.yaml
 python3 sre_ai_agent.py
 ```
+<img width="1106" height="682" alt="Screenshot 2025-12-17 110927" src="https://github.com/user-attachments/assets/eb2bccca-9780-4c8a-8a7c-c9383d4e0730" />
+<img width="1289" height="748" alt="Screenshot 2025-12-17 111049" src="https://github.com/user-attachments/assets/f9c70351-aa3e-42cb-b1ca-c8c6dc325886" />
+<img width="1300" height="365" alt="Screenshot 2025-12-17 111238" src="https://github.com/user-attachments/assets/ab390742-8462-44de-84f7-2a0654e53c92" />
+<img width="914" height="230" alt="Screenshot 2025-12-17 111319" src="https://github.com/user-attachments/assets/bdfc63f2-04b9-48b1-b1db-0695a1068feb" />
+<img width="757" height="214" alt="Screenshot 2025-12-17 111342" src="https://github.com/user-attachments/assets/cf805d9d-52d8-40ac-b49f-66f4f5fd2d64" />
+<img width="968" height="248" alt="Screenshot 2025-12-17 111359" src="https://github.com/user-attachments/assets/9f278c10-779c-4179-acf2-c1d2d367de1b" />
+<img width="983" height="226" alt="Screenshot 2025-12-17 111652" src="https://github.com/user-attachments/assets/27140bc4-5c11-4836-8b3c-6f80379a3dad" />
+<img width="888" height="199" alt="Screenshot 2025-12-17 113447" src="https://github.com/user-attachments/assets/64167296-85a9-49a2-8651-0912fc6dedad" />
+
+
+
+
+
+
+
+
+
 
 ---
 
