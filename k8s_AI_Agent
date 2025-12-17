@@ -1,74 +1,125 @@
-Installing Minikube and ArgoCD on Ubuntu 24.04 LTS
-Step #1: Install Minikube on Ubuntu 24.04 LTS
-Update System Packages
+
+
+🔹 STEP 1: Update System
 sudo apt update -y
-Install Minikube Dependencies
-sudo apt install curl wget apt-transport-https -y
-Install Docker
-sudo apt install docker.io
-Configure Docker to Run Without sudo
+sudo apt upgrade -y
+
+🔹 STEP 2: Install Required Packages
+sudo apt install -y curl wget apt-transport-https ca-certificates gnupg lsb-release
+
+🔹 STEP 3: Install Docker
+sudo apt install -y docker.io
+sudo systemctl enable docker
+sudo systemctl start docker
+
+Allow Docker Without sudo
 sudo usermod -aG docker $USER
 sudo chmod 666 /var/run/docker.sock
-Check for Virtualization Support
+newgrp docker
+
+
+Verify:
+
+docker version
+
+🔹 STEP 4: Check Virtualization Support
 egrep -q 'vmx|svm' /proc/cpuinfo && echo yes || echo no
-Install KVM and Other Tools
-sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon
-Download the Latest Minikube Binary
+
+🔹 STEP 5: Install Minikube
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-Install Minikube
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-Verify Minikube Installation
+
+
+Verify:
+
 minikube version
-Output:
 
-minikube version: v1.33.1
-commit: 5883c09216182566a63dff4c326a6fc9ed2982ff
-Step #2: Install kubectl on Minikube
-kubectl is a command-line utility used to interact with a Kubernetes cluster.
-
-Download kubectl
+🔹 STEP 6: Install kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-Set Executable Permissions
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
-Verify kubectl Installation
-kubectl version --client --output=yaml
-Output:
 
-clientVersion:
-  buildDate: "2024-06-11T20:29:44Z"
-  compiler: gc
-  gitCommit: 39683505b630ff2121012f3c5b16215a1449d5ed
-  gitTreeState: clean
-  gitVersion: v1.30.2
-  goVersion: go1.22.4
-  major: "1"
-  minor: "30"
-  platform: linux/amd64
-kustomizeVersion: v5.0.4-0.20230601165947-6ce0bf390ce3
-Step #3: Start Minikube on Ubuntu 24.04 LTS
-Start Minikube with Docker Driver
-minikube start --vm-driver docker
-Output:
 
-* minikube v1.33.1 on Ubuntu 24.04 (xen/amd64)
-* Using the docker driver based on user configuration
-... (truncated for brevity) ...
-Check Minikube Status
+Verify:
+
+kubectl version --client
+
+🔹 STEP 7: Start Minikube (Docker Driver)
+minikube start --driver=docker
+
+
+Verify:
+
 minikube status
-Output:
-
-minikube
-  type: Control Plane
-  host: Running
-  kubelet: Running
-  apiserver: Running
-  kubeconfig: Configured
-Verify Kubernetes Cluster
-kubectl cluster-info
 kubectl get nodes
-Create Deployment and Service
-kubectl create deployment my-app --image=nginx
-kubectl expose deployment my-app --name=my-app-svc --type=NodePort --port=80
-kubectl get svc my-app-svc
-minikube service my-app-svc --url
+
+🔹 STEP 8: Install Python & Virtual Environment
+sudo apt install -y python3 python3-pip python3-venv
+
+
+Verify:
+
+python3 --version
+pip3 --version
+
+🔹 STEP 9: Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+
+Start Ollama:
+
+ollama serve
+
+
+(Open new terminal)
+
+Pull model:
+
+ollama pull gemma:2b
+
+🔹 STEP 10: Create AI SRE Project
+mkdir ai-sre-demo
+cd ai-sre-demo
+
+Create Virtual Environment
+python3 -m venv venv
+source venv/bin/activate
+
+Install Python Dependencies
+pip install requests ollama
+
+🔹 STEP 11: Create AI SRE Script
+nano ai_sre.py
+
+
+➡️ Paste your AI SRE Python code
+Save & exit.
+
+🔹 STEP 12: Create Broken App (Image Error)
+nano broken-image.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broken-app
+  template:
+    metadata:
+      labels:
+        app: broken-app
+    spec:
+      containers:
+      - name: app
+        image: nginx:not-exist
+
+
+Apply:
+
+kubectl apply -f broken-image.yaml
+
+🔹 STEP 13: Run AI SRE
+python3 ai_sre.py
