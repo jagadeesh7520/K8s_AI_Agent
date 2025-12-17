@@ -1,0 +1,98 @@
+ubuntu@ip-172-31-29-113:~/K8s-AI-Agent-demo$ python3 k8s_agent.py
+
+🔍 POD STATUS
+NAME                       READY   STATUS             RESTARTS      AGE
+demo-app-b6b7f598c-d7v2l   0/1     CrashLoopBackOff   3 (32s ago)   78s
+
+
+📄 LOGS
+ stress: info: [1] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd
+stress: FAIL: [1] (415) <-- worker 7 got signal 9
+stress: WARN: [1] (417) now reaping child worker processes
+stress: FAIL: [1] (421) kill error: No such process
+stress: FAIL: [1] (451) failed run completed in 0s
+
+
+📄 EVENTS
+ Name:             demo-app-b6b7f598c-d7v2l
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Wed, 17 Dec 2025 06:14:01 +0000
+Labels:           app=demo-app
+                  pod-template-hash=b6b7f598c
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.15
+IPs:
+  IP:           10.244.0.15
+Controlled By:  ReplicaSet/demo-app-b6b7f598c
+Containers:
+  app:
+    Container ID:  docker://69b08f04de2b8a5163378ff1ed81f20bbd8048700e5767fbf805a95bcff834fc
+    Image:         polinux/stress
+    Image ID:      docker-pullable://polinux/stress@sha256:b6144f84f9c15dac80deb48d3a646b55c7043ab1d83ea0a697c09097aaad21aa
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      stress
+    Args:
+      --vm
+      1
+      --vm-bytes
+      100M
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    1
+      Started:      Wed, 17 Dec 2025 06:14:47 +0000
+      Finished:     Wed, 17 Dec 2025 06:14:47 +0000
+    Ready:          False
+    Restart Count:  3
+    Limits:
+      memory:  32Mi
+    Requests:
+      memory:     32Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-kbmbv (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-kbmbv:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  78s                default-scheduler  Successfully assigned default/demo-app-b6b7f598c-d7v2l to minikube
+  Normal   Pulled     76s                kubelet            Successfully pulled image "polinux/stress" in 719ms (719ms including waiting). Image size: 9744175 bytes.
+  Normal   Pulled     75s                kubelet            Successfully pulled image "polinux/stress" in 717ms (717ms including waiting). Image size: 9744175 bytes.
+  Normal   Pulled     60s                kubelet            Successfully pulled image "polinux/stress" in 781ms (781ms including waiting). Image size: 9744175 bytes.
+  Normal   Pulling    33s (x4 over 77s)  kubelet            Pulling image "polinux/stress"
+  Normal   Pulled     33s                kubelet            Successfully pulled image "polinux/stress" in 747ms (747ms including waiting). Image size: 9744175 bytes.
+  Normal   Created    32s (x4 over 76s)  kubelet            Created container: app
+  Normal   Started    32s (x4 over 76s)  kubelet            Started container app
+  Warning  BackOff    6s (x9 over 75s)   kubelet            Back-off restarting failed container app in pod demo-app-b6b7f598c-d7v2l_default(05e98f4f-1a21-4359-b407-1a6371649fbe)
+  
+
+Proposed Fix:
+
+kubectl set image deployment/demo-app app=nginx:latest
+Approve fix? (yes/no): yes
+Applying fix...
+deployment.apps/demo-app image updated
